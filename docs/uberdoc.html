@@ -3028,7 +3028,7 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>overload-middleware -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">overload-middleware</h1><h2 class="project-version">0.1.0</h2><br /><p>Clojure/Ring middleware handler to automatically apply overload control based on a target latency</p>
+</script><title>overload-middleware -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">overload-middleware</h1><h2 class="project-version">0.1.1</h2><br /><p>Clojure/Ring middleware handler to automatically apply overload control based on a target latency</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.5.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.5.1</td></tr><tr><td class="dep-name">prismatic/schema</td><td class="dotted"><hr /></td><td class="dep-version">0.1.6</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#overload-middleware.bucket">overload-middleware.bucket</a></li><li><a href="#overload-middleware.latency">overload-middleware.latency</a></li><li><a href="#overload-middleware.middleware">overload-middleware.middleware</a></li><li><a href="#overload-middleware.schemas">overload-middleware.schemas</a></li><li><a href="#overload-middleware.utils">overload-middleware.utils</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#overload-middleware.bucket" name="overload-middleware.bucket"><h1 class="project-name">overload-middleware.bucket</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns overload-middleware.bucket
   (:require [overload-middleware.schemas :refer [TokenBucketParameters]]
@@ -3198,11 +3198,11 @@ net.brehaut.ClojureTools = (function (SH) {
    :dec-threshold 0.0,
    :inc-factor 2,
    :inc-threshold -0.005, ; -0.5%
-   :inc-weight 0.1,
-   :min-rate 5,
+   :inc-weight -0.1,
+   :min-rate 0.05,
    :max-rate 5000,
    :nreq 100,
-   :timeout 1000,
+   :timeout 1000, ; milliseconds
    :alpha 0.7})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def TokenBucketParameters
   {:tokens s/Number
