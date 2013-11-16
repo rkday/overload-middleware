@@ -22,7 +22,7 @@ approach taken by [the Crest HTTP server](https://github.com/Metaswitch/crest/).
     ;; Aim to have 90% of requests served in 100ms or less
     (def wrapped-app (wrap-overload app {:target-latency 100}))
 
-wrap-overload takes a Rong app to wrap, and an options map with three
+wrap-overload takes a Ring app to wrap, and an options map with three
 possible keys:
 
 - :target-latency (mandatory) - the target latency in milliseconds
