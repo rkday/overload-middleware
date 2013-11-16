@@ -4,7 +4,7 @@
             [schema.core :as s]))
 
 (def small-bucket {:tokens 20})
-(def overrides {:override-algorithm-parameters {:nreq 2} :override-bucket-parameters small-bucket})
+(def overrides {:override-algorithm-parameters {:nreq 2 :min-rate 2} :override-bucket-parameters small-bucket})
 (def high-latency-target (assoc overrides :target-latency 100))
 (def low-latency-target (assoc overrides :target-latency 0.1))
 (defn app [req]
