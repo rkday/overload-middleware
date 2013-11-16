@@ -15,3 +15,4 @@
 (defn abs [num]
   (if (neg? num) (- 0 num) num))
 
+(defn get-time [] (System/currentTimeMillis))

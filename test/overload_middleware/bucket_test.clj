@@ -1,6 +1,7 @@
 (ns overload-middleware.bucket-test
   (:require [midje.sweet :refer :all]
-            [overload-middleware.bucket :refer :all]))
+            [overload-middleware.bucket :refer :all]
+            [overload-middleware.utils :refer [get-time]]))
 
 (def a-constant-value 3)
 (def fixed-time (System/currentTimeMillis))

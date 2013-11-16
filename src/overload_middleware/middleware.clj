@@ -1,7 +1,8 @@
 (ns overload-middleware.middleware
   (:require [overload-middleware.bucket :refer :all]
             [overload-middleware.latency :refer :all]
-            [overload-middleware.utils :refer :all]))
+            [overload-middleware.utils :refer :all]
+            [overload-middleware.schemas :refer :all]))
 
 (declare register-new-latency)
 
@@ -9,14 +10,11 @@
                      {:keys [target-latency
                              override-algorithm-parameters
                              override-bucket-parameters]}]
-  (let [algorithm-parameters (merge {:max-rate 5000, :min-rate 5,
-                                     :dec-factor 1.2, :inc-weight 0.1,
-                                     :alpha 0.7, :timeout 1000, :dec-threshold 0.0,
-                                     :inc-threshold -0.005, :inc-factor 2, :nreq 100}
-                                    override-algorithm-parameters)
-        bucket-parameters (merge {:tokens 100, :max 5000,
-                                  :last-time (get-time) :rate 10}
-                                 override-bucket-parameters)
+  {:pre [(number? target-latency) (pos? target-latency)]}
+  (let [algorithm-parameters (merge default-latency-algorithm-parameters override-algorithm-parameters)
+        bucket-parameters (assoc
+                              (merge default-token-bucket-parameters override-bucket-parameters)
+                            :last-time (get-time))
         bucket (ref bucket-parameters)
         latency-info (ref {:target-latency target-latency
                            :smoothed-estimate target-latency

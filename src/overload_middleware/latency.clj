@@ -1,19 +1,8 @@
 (ns overload-middleware.latency
   (:require [overload-middleware.utils :refer [abs]]
+            [overload-middleware.schemas :refer [LatencyAlgorithmParameters]]
             [schema.core :as s]
             ))
-
-(def LatencyAlgorithmParameters
-  {:dec-factor s/Number
-   :dec-threshold s/Number
-   :inc-factor s/Number
-   :inc-threshold s/Number
-   :inc-weight s/Number
-   :min-rate s/Number
-   :max-rate s/Number
-   :nreq s/Number
-   :timeout s/Number
-   :alpha s/Number})
 
 (s/defn sensible-parameters? [{:keys [dec-factor dec-threshold
                                      inc-factor inc-threshold inc-weight
