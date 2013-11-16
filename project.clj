@@ -1,4 +1,4 @@
-(defproject overload-middleware "0.1.0"
+(defproject overload-middleware "0.1.1"
   :description "Clojure/Ring middleware handler to automatically apply overload control based on a target latency"
   :url "https://github.com/rkday/overload-middleware"
   :license {:name "MIT"

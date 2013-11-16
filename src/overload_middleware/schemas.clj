@@ -28,11 +28,11 @@
    :dec-threshold 0.0,
    :inc-factor 2,
    :inc-threshold -0.005, ; -0.5%
-   :inc-weight 0.1,
-   :min-rate 5,
+   :inc-weight -0.1,
+   :min-rate 0.05,
    :max-rate 5000,
    :nreq 100,
-   :timeout 1000,
+   :timeout 1000, ; milliseconds
    :alpha 0.7})
 
 (def TokenBucketParameters
