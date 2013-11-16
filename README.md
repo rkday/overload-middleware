@@ -22,6 +22,21 @@ approach taken by [the Crest HTTP server](https://github.com/Metaswitch/crest/).
     ;; Aim to have 90% of requests served in 100ms or less
     (def wrapped-app (wrap-overload app {:target-latency 100}))
 
+wrap-overload takes a Rong app to wrap, and an options map with three
+possible keys:
+
+- :target-latency (mandatory) - the target latency in milliseconds
+  (i.e. the number of milliseconds you want 90% of your requests to be
+  served within)
+- :override-bucket-parameters (optional) - a map containing parameters to control
+  the size and initial state of the token bucket.
+- :override-algorithm-parameters (optional) - a map containing parameters to
+  control how the refill rate of the token bucket is affected by the latency.
+
+The structure of override-algorithm-parameters and
+override-bucket-parameters, and their default values, is documented
+[in the Marginalia docs](http://rkday.github.io/overload-middleware/docs/uberdoc.html#overload-middleware.schemas).
+
 ## License
 
 Copyright © 2013 Robert K. Day.
