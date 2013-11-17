@@ -13,14 +13,15 @@ approach taken by [the Crest HTTP server](https://github.com/Metaswitch/crest/).
 
 ## Usage
 
+```clojure
+(ns my-ring-app.core
+  (:require [overload-middleware.middleware :refer wrap-overload]))
 
-    (ns my-ring-app.core
-        (:require [overload-middleware.middleware :refer wrap-overload]))
+(defn myapp [req] {:status 200 :body "Hello World" :headers {}})
 
-    (defn myapp [req] {:status 200 :body "Hello World" :headers {}})
-
-    ;; Aim to have 90% of requests served in 100ms or less
-    (def wrapped-app (wrap-overload app {:target-latency 100}))
+;; Aim to have 90% of requests served in 100ms or less
+(def wrapped-app (wrap-overload app {:target-latency 100}))
+```
 
 wrap-overload takes a Ring app to wrap, and an options map with three
 possible keys:
