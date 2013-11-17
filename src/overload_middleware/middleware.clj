@@ -6,28 +6,34 @@
 
 (declare register-new-latency)
 
-(defn wrap-overload [app
-                     {:keys [target-latency
-                             override-algorithm-parameters
-                             override-bucket-parameters]}]
-  {:pre [(number? target-latency) (pos? target-latency)]}
-  (let [algorithm-parameters (merge default-latency-algorithm-parameters override-algorithm-parameters)
-        bucket-parameters (assoc
-                              (merge default-token-bucket-parameters override-bucket-parameters)
-                            :last-time (get-time))
-        bucket (ref bucket-parameters)
-        latency-info (ref {:target-latency target-latency
-                           :smoothed-estimate target-latency
-                           :recent-latencies []
-                           :recent-overloads false
-                           :last-calculation (get-time)})]
-    (fn [req]
-      (if (get-token-with-replenishment bucket)
-        (let [[latency {:keys [status] :as result}] (with-latency app req)]
-          (if (= 503 status) (dosync (alter latency-info assoc :recent-overloads true)))
-          (register-new-latency latency-info algorithm-parameters bucket latency)
-          result)
-        {:status 503 :body "Overloaded"}))))
+(defn create-overload-wrapper [create-overload-response
+                               is-overload-response?]
+  (fn  [app
+       {:keys [target-latency
+               override-algorithm-parameters
+               override-bucket-parameters]}]
+    {:pre [(number? target-latency) (pos? target-latency)]}
+    (let [algorithm-parameters (merge default-latency-algorithm-parameters override-algorithm-parameters)
+          bucket-parameters (assoc
+                                (merge default-token-bucket-parameters override-bucket-parameters)
+                              :last-time (get-time))
+          bucket (ref bucket-parameters)
+          latency-info (ref {:target-latency target-latency
+                             :smoothed-estimate target-latency
+                             :recent-latencies []
+                             :recent-overloads false
+                             :last-calculation (get-time)})]
+      (fn [req]
+        (if (get-token-with-replenishment bucket)
+          (let [[latency {:keys [status] :as result}] (with-latency app req)]
+            (if (is-overload-response? result) (dosync (alter latency-info assoc :recent-overloads true)))
+            (register-new-latency latency-info algorithm-parameters bucket latency)
+            result)
+          (create-overload-response req))))))
+
+(def wrap-overload (create-overload-wrapper
+                    (constantly {:status 503 :body "Overloaded"})
+                    #(= 503 (:status %))))
 
 (defn register-new-latency [latency-info algorithm-parameters bucket new-latency]
   (let [[do-update ninetieth-percentile] (add-latency-sample latency-info
